@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glitch the Rooster</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #0f0f23, #1a1a3e, #2d1b69);
+            min-height: 100vh;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .title {
+            font-size: 3.5rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #00ffff, #ff00ff, #ffff00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            animation: glitch-text 2s infinite;
+            text-shadow: 2px 2px 0px #ff00ff, -2px -2px 0px #00ffff;
+        }
+
+        .subtitle {
+            color: #00ffff;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+        }
+
+        .rooster-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            margin: 0 auto 2rem;
+        }
+
+        .rooster {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Body */
+        .body {
+            width: 120px;
+            height: 100px;
+            background: linear-gradient(145deg, #333, #666);
+            border-radius: 50px 50px 30px 30px;
+            position: absolute;
+            top: 180px;
+            left: 140px;
+            border: 3px solid #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+
+        /* Head */
+        .head {
+            width: 80px;
+            height: 70px;
+            background: linear-gradient(145deg, #444, #777);
+            border-radius: 40px;
+            position: absolute;
+            top: 120px;
+            left: 160px;
+            border: 2px solid #ff00ff;
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
+        }
+
+        /* Comb */
+        .comb {
+            width: 40px;
+            height: 30px;
+            background: linear-gradient(45deg, #ff3366, #ff6699);
+            border-radius: 20px 20px 0 0;
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            border: 2px solid #ff00ff;
+        }
+
+        .comb::before,
+        .comb::after {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 20px;
+            background: linear-gradient(45deg, #ff3366, #ff6699);
+            border-radius: 10px 10px 0 0;
+            border: 1px solid #ff00ff;
+        }
+
+        .comb::before {
+            left: -10px;
+            top: 5px;
+        }
+
+        .comb::after {
+            right: -10px;
+            top: 5px;
+        }
+
+        /* Eyes */
+        .eye {
+            width: 15px;
+            height: 15px;
+            background: #00ffff;
+            border-radius: 50%;
+            position: absolute;
+            top: 25px;
+            animation: blink 3s infinite;
+            box-shadow: 0 0 10px #00ffff;
+        }
+
+        .eye.left {
+            left: 15px;
+        }
+
+        .eye.right {
+            right: 15px;
+        }
+
+        /* Beak */
+        .beak {
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 20px solid #ffff00;
+            position: absolute;
+            top: 35px;
+            left: 25px;
+            filter: drop-shadow(0 0 5px #ffff00);
+        }
+
+        /* Wings */
+        .wing {
+            width: 60px;
+            height: 40px;
+            background: linear-gradient(145deg, #555, #888);
+            border-radius: 30px;
+            position: absolute;
+            top: 190px;
+            border: 2px solid #00ffff;
+            animation: flap 2s ease-in-out infinite;
+        }
+
+        .wing.left {
+            left: 90px;
+            transform-origin: right center;
+        }
+
+        .wing.right {
+            right: 90px;
+            transform-origin: left center;
+        }
+
+        /* Legs */
+        .leg {
+            width: 8px;
+            height: 40px;
+            background: linear-gradient(180deg, #ffff00, #ff9900);
+            position: absolute;
+            top: 270px;
+            border-radius: 4px;
+            box-shadow: 0 0 8px rgba(255, 255, 0, 0.7);
+        }
+
+        .leg.left {
+            left: 160px;
+        }
+
+        .leg.right {
+            right: 160px;
+        }
+
+        /* Feet */
+        .foot {
+            width: 20px;
+            height: 8px;
+            background: #ff9900;
+            position: absolute;
+            top: 35px;
+            left: -6px;
+            border-radius: 10px;
+            box-shadow: 0 0 5px rgba(255, 153, 0, 0.7);
+        }
+
+        /* Tech Details */
+        .circuit {
+            position: absolute;
+            width: 30px;
+            height: 2px;
+            background: #00ffff;
+            box-shadow: 0 0 5px #00ffff;
+        }
+
+        .circuit1 {
+            top: 200px;
+            left: 150px;
+            transform: rotate(45deg);
+        }
+
+        .circuit2 {
+            top: 220px;
+            right: 150px;
+            transform: rotate(-45deg);
+        }
+
+        .circuit3 {
+            top: 240px;
+            left: 180px;
+            transform: rotate(90deg);
+        }
+
+        /* LED indicators */
+        .led {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            position: absolute;
+            animation: pulse 1.5s infinite;
+        }
+
+        .led.red {
+            background: #ff0066;
+            top: 195px;
+            left: 170px;
+            box-shadow: 0 0 10px #ff0066;
+        }
+
+        .led.green {
+            background: #00ff66;
+            top: 210px;
+            right: 170px;
+            box-shadow: 0 0 10px #00ff66;
+        }
+
+        .led.blue {
+            background: #0066ff;
+            top: 225px;
+            left: 190px;
+            box-shadow: 0 0 10px #0066ff;
+        }
+
+        /* Stats */
+        .stats {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #00ffff;
+            border-radius: 10px;
+            padding: 1rem;
+            color: #00ffff;
+            font-size: 0.9rem;
+            max-width: 300px;
+            margin: 0 auto;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Animations */
+        @keyframes glitch-text {
+            0%, 100% { transform: translate(0); }
+            10% { transform: translate(-2px, -1px); }
+            20% { transform: translate(2px, 1px); }
+            30% { transform: translate(-1px, 2px); }
+            40% { transform: translate(1px, -2px); }
+            50% { transform: translate(-2px, 1px); }
+            60% { transform: translate(2px, -1px); }
+            70% { transform: translate(-1px, -2px); }
+            80% { transform: translate(1px, 2px); }
+            90% { transform: translate(-2px, -1px); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes blink {
+            0%, 90%, 100% { opacity: 1; }
+            95% { opacity: 0; }
+        }
+
+        @keyframes flap {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(-15deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        /* Background effects */
+        .bg-circuit {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            z-index: 1;
+            background-image: 
+                linear-gradient(90deg, #00ffff 1px, transparent 1px),
+                linear-gradient(180deg, #00ffff 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: circuit-move 10s linear infinite;
+        }
+
+        @keyframes circuit-move {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .title { font-size: 2.5rem; }
+            .rooster-container { 
+                width: 300px; 
+                height: 300px; 
+            }
+            .body { transform: scale(0.75); }
+            .head { transform: scale(0.75); }
+            .wing { transform: scale(0.75); }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-circuit"></div>
+    
+    <div class="container">
+        <h1 class="title">GLITCH THE ROOSTER</h1>
+        <p class="subtitle">CYBERNETIC FIGHTING COCK • WILSON, OKLAHOMA</p>
+        <p class="subtitle" style="font-size: 0.9rem; margin-top: -1rem;">TRAINING FOR LEGAL ROBOT VS ROOSTER COMBAT</p>
+        
+        <div class="rooster-container">
+            <div class="rooster">
+                <!-- Body -->
+                <div class="body"></div>
+                
+                <!-- Head -->
+                <div class="head">
+                    <div class="comb"></div>
+                    <div class="eye left"></div>
+                    <div class="eye right"></div>
+                    <div class="beak"></div>
+                </div>
+                
+                <!-- Wings -->
+                <div class="wing left"></div>
+                <div class="wing right"></div>
+                
+                <!-- Legs -->
+                <div class="leg left">
+                    <div class="foot"></div>
+                </div>
+                <div class="leg right">
+                    <div class="foot"></div>
+                </div>
+                
+                <!-- Tech elements -->
+                <div class="circuit circuit1"></div>
+                <div class="circuit circuit2"></div>
+                <div class="circuit circuit3"></div>
+                
+                <!-- LED indicators -->
+                <div class="led red"></div>
+                <div class="led green"></div>
+                <div class="led blue"></div>
+            </div>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-line">
+                <span>LOCATION:</span>
+                <span style="color: #ffff00;">WILSON, OK</span>
+            </div>
+            <div class="stat-line">
+                <span>STATUS:</span>
+                <span style="color: #00ff66;">TRAINING MODE</span>
+            </div>
+            <div class="stat-line">
+                <span>POWER LEVEL:</span>
+                <span style="color: #ffff00;">42%</span>
+            </div>
+            <div class="stat-line">
+                <span>COMBAT READY:</span>
+                <span style="color: #ff6600;">SOON™</span>
+            </div>
+            <div class="stat-line">
+                <span>GLITCH FACTOR:</span>
+                <span style="color: #ff00ff;">MAXIMUM</span>
+            </div>
+            <div class="stat-line">
+                <span>MEME POTENTIAL:</span>
+                <span style="color: #00ffff;">LEGENDARY</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
